@@ -6,7 +6,7 @@
   "author": "Ben Conolly <ben@thinkmill.com.au>",
   "license": "MIT",
   "scripts": {
-    "start": "mdx-deck presentations/noviny/dsm-01-19/Presentation.js"
+    "start": "mdx-deck presentations/noviny/react-syd-03-19/Presentation.js"
   },
   "dependencies": {
     "code-surfer": "^0.5.3",

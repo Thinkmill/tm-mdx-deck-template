@@ -14,9 +14,33 @@ export default {
   colors: {
     text: "#FFFFFF",
     background: TM_PRIMARY,
-    link: "#FFFFFF"
+    link: "#FFFFFF",
+    preBackground: TM_DARK
+  },
+  table: {
+    margin: "auto",
+    width: "90%"
+  },
+  pre: {
+    whiteSpace: "pre"
   }
 };
+
+export const lightLayout = props => (
+  <div
+    {...props}
+    style={{
+      height: "100vh",
+      width: "100vw",
+      backgroundColor: "white",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center"
+    }}
+  >
+    {props.children}
+  </div>
+);
 
 export const darkLayout = props => (
   <div
@@ -30,7 +54,14 @@ export const darkLayout = props => (
       justifyContent: "center"
     }}
   >
-    {props.children}
+    <div
+      style={{
+        marginLeft: "16px",
+        marginRight: "16px"
+      }}
+    >
+      {props.children}
+    </div>
   </div>
 );
 

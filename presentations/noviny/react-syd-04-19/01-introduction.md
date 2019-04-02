@@ -1,5 +1,9 @@
 import { darkLayout, lightLayout } from "../../../src/theme";
-import { Appear, Code } from "mdx-deck";
+import CodeBlock from "../../../src/CodeBlock";
+import { Appear, FullScreenCode } from "mdx-deck";
+import Prism from "prismjs";
+import "prismjs/components/prism-jsx";
+import "prismjs/themes/prism-tomorrow.css";
 
 # Extracting Types From Your Components
 
@@ -15,24 +19,16 @@ import { Appear, Code } from "mdx-deck";
 
 - Why you should document your components
 - How easy this can be
-- Here's one we built, and how we built it
+- Some tools that help you out
 
 ---
 
-export default lightLayout;
-
-![No Document, only code](./no-docs-only-code.png)
-
----
-
-## Why you should document your components
-
----
+## Why you should document your code
 
 <ul style={{ textAlign: "left" }}>
   <Appear>
-    <li>Documentation helps explain intent</li>
-    <li>It makes working on the codebase easier in the future</li>
+    <li>It makes your code easier to reuse</li>
+    <li>It makes working on the codebase faster and easier in the future</li>
     <li>The person it's helping can easily be you</li>
     <li>
       (Having to write out and explain things helps you write better code)
@@ -42,9 +38,19 @@ export default lightLayout;
 
 ---
 
-## So... component docs eh?
+export default lightLayout;
+
+![No Test, only code](./bad-idea.jpeg)
 
 ---
+
+export default lightLayout;
+
+![No Document, only code](./no-docs-only-code.png)
+
+---
+
+## So... component docs eh?
 
 <ul style={{ textAlign: "left" }}>
   <Appear>
@@ -62,7 +68,7 @@ export default lightLayout;
 
 ---
 
-## Thankfully there's tools that help you do this
+## Thankfully there's tools that can make this faster to do
 
 ---
 
@@ -104,58 +110,165 @@ https://github.com/styleguidist/react-docgen-typescript
 
 ---
 
+export default darkLayout;
+
+<CodeBlock
+  snippet={`
+export type ButtonProps = {
+  /** The base styling to apply to the button. */
+  appearance?: ButtonAppearances;
+  /** Provides a url for buttons being used as a link. */
+  href?: string;
+  /** Set if the button is disabled. */
+  isDisabled: boolean;
+  /**
+   * Set if the button is loading. When isLoading
+   * is true, text is hidden, and
+   * a spinner is shown in its place. The
+   * button maintains the width that it
+   * would have if the text were visible.
+   */
+  isLoading: boolean;
+  /** Change the style to indicate the button is selected. */
+  isSelected: boolean;
+};
+`}
+/>
+
+---
+
 <ul style={{ textAlign: "left" }}>
-  <Appear>
-    <li>
-      Step 1: Just parse types out of the AST, and take the comments above them
-      as the text
-    </li>
-    <li>
-      Step 2: We really really want cross-file imports, let's 'just' add that
-    </li>
-    <li>Step 3: Sure, no, sure, we can support default props</li>
-    <li>4: Sure, why not typescript?</li>
-    <li>
-      Step 5: Oh god we keep breaking the website, we need a second library
-    </li>
-    <li>Step 6: Oh look, we can now use this everywhere</li>
-  </Appear>
+  <li>
+    Just parse types out of the AST, and take the comments above them as the
+    text
+  </li>
 </ul>
 
 ---
 
 export default darkLayout;
 
-import { syntaxHighlighter } from "mdx-deck/themes";
-export const themes = [syntaxHighlighter];
-
-```jsx
-import { Props } from "prett-proptypes";
-import MyCoolComponent from "../MyCoolComponent";
-
-<Props heading="My Cool Component" component={MyCoolComponent} />;
-```
-
-(and a cheeky babel plugin)
-
-```json
-{
-  "plugins": ["babel-plugin-extract-react-types"]
-}
-```
+<CodeBlock
+  snippet={`function convert(path, context) {
+  if (typeof path.get !== "function")
+    throw new Error(
+      \`Did not pass a NodePath to convert() \${JSON.stringify(path)}\`
+    );
+  let converter = converters[path.type];
+  if (!converter) throw new Error(\`Missing converter for: \${path.type}\`);
+  let result = converter(path, context);
+  attachComments(path.node, result);
+  
+  return result;
+}`}
+/>
 
 ---
 
 export default darkLayout;
 
-```jsx
+<CodeBlock
+  snippet={`function convert(path, context) {
+  let converter = converters[path.type];
+  let result = converter(path, context);
+  attachComments(path.node, result);
+  
+  return result;
+}`}
+/>
+
+---
+
+export default darkLayout;
+
+<CodeBlock
+  snippet={`
+converters.StringTypeAnnotation = (path) => {
+  return { kind: "string" };
+};
+  `}
+/>
+
+---
+
+We only added converters when we needed them
+
+---
+
+<ul style={{ textAlign: "left" }}>
+  <li>
+    Just parse types out of the AST, and take the comments above them as the
+    text
+  </li>
+  <Appear>
+    <li>We really really want cross-file imports, let's 'just' add that</li>
+    <li>Sure, no, sure, we can support default props</li>
+    <li>Wait, can we support typescript?</li>
+    <li>Oh god we keep breaking the website</li>
+  </Appear>
+</ul>
+
+---
+
+What we're outputing is basically an AST
+
+What if we formalised this?
+
+---
+
+export default darkLayout;
+
+<CodeBlock
+  snippet={`
+// docs-file.js
+import { Props } from "prett-proptypes";
+import MyCoolComponent from "../MyCoolComponent";
+
+<Props heading="My Cool Component" component={MyCoolComponent} />;
+  `}
+/>
+
+##### (and a cheeky babel plugin)
+
+<CodeBlock
+  snippet={`
+// babel.config.js  
+{
+  "plugins": ["babel-plugin-extract-react-types"]
+}`}
+/>
+
+---
+
+export default darkLayout;
+
+<CodeBlock
+  snippet={`
+// docs-file.js
 import Props from "pretty-proptypes";
 
 <Props
   heading="My Cool Component"
   props={require("!!extract-react-types-loader!../my-cool-component.js")}
 />;
-```
+`}
+/>
+
+---
+
+<ul style={{ textAlign: "left" }}>
+  <li>
+    Just parse types out of the AST, and take the comments above them as the
+    text
+  </li>
+  <li>We really really want cross-file imports, let's 'just' add that</li>
+  <li>Sure, no, sure, we can support default props</li>
+  <li>Wait, can we support typescript?</li>
+  <li>Oh god we keep breaking the website</li>
+  <Appear>
+    <li>Oh look, we can use this everywhere now</li>
+  </Appear>
+</ul>
 
 ---
 
@@ -180,7 +293,7 @@ I want to check it out!
 
 [Excellent, try this](https://extract-react-types.com/repl)
 
-(this cool stuff was made by [Ajay Mathur](https://github.com/ajaymathur))
+(repl made by [Ajay Mathur](https://github.com/ajaymathur))
 
 ---
 
@@ -206,18 +319,14 @@ Parting thought, what if we just extracted other types, from functions or object
 
 ---
 
-If you want to check out extract-react-types:
-
-[extract-react-types.com](extract-react-types.com)
-
-https://github.com/atlassian/extract-react-types
-
----
-
 export default darkLayout;
 
 # Thanks for listening!
 
 Any questions?
 
-(or reach out to me on twitter @noviny)
+#### (or reach out to me on twitter @noviny)
+
+##### [extract-react-types.com](extract-react-types.com)
+
+##### https://github.com/atlassian/extract-react-types

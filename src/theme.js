@@ -20,9 +20,6 @@ export default {
   table: {
     margin: "auto",
     width: "90%"
-  },
-  pre: {
-    whiteSpace: "pre"
   }
 };
 

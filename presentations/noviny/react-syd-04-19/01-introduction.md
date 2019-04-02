@@ -98,9 +98,9 @@ https://github.com/styleguidist/react-docgen-typescript
 <ul style={{ textAlign: "center", listStyle: "none" }}>
   <Appear>
     <li>❌ Prop-Types</li>
-    <li>❌ Flow (but it supports this now)</li>
+    <li>❌ Flow</li>
     <li>✅ Typescript</li>
-    <li>❌ Cross-file type imports</li>
+    <li>✅ Cross-file type imports</li>
   </Appear>
 </ul>
 
@@ -279,7 +279,7 @@ export default darkLayout;
 <ul style={{ textAlign: "center", listStyle: "none" }}>
   <Appear>
     <li>❌ Prop-Types</li>
-    <li>✅ Flow (but it supports this now)</li>
+    <li>✅ Flow</li>
     <li>✅ Typescript</li>
     <li>✅ Cross-file type imports</li>
     <li>✅ Default Props</li>
